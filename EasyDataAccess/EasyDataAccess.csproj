@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyTitle>DataAccess</AssemblyTitle>
+    <AssemblyVersion>1.0.%2a</AssemblyVersion>
+    <Version>1.0.0</Version>
+    <PackageId>EasyDataAccess</PackageId>
+    <RestorePackages>true</RestorePackages>
+    <BuildPackage>true</BuildPackage>
+    <SolutionDir Condition="'$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'"></SolutionDir>
+    <Cofigurations>Debug;Release</Cofigurations>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>EasyDataAccess - Micro ORM</Title>
+    <Authors>Ckacio</Authors>
+    <Product>EasyDataAccess - Micro ORM</Product>
+    <Description>EasyDataAccess - Micro ORM - is a simple tool that helps simplify the creation of a data access layer, automates data access, also generates data access code and automatically performs the mapping between data and objects.</Description>
+    <PackageTags>ORM;ADO.NET;DATA LAYER;</PackageTags>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>false</Optimize>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+
+</Project>
