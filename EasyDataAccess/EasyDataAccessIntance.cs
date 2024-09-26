@@ -13,16 +13,15 @@ using System.Collections;
 using System.Dynamic;
 using System.Linq;
 using System.Diagnostics;
+using DataAccess.Interfaces;
 
 namespace EasyDataAccess
 {
-    public class EasyDataAccessIntance : IDisposable
+    public class EasyDataAccessIntance : IDisposable, IEasyDataAccessIntance
     {
-
         #region Private Variables
 
         private bool disposed = false;
-        private string ConnectionString;
         private IDbConnection Connection;
         public IDbCommand Command { get; set; }
         private int CommandTimeout = 0;
@@ -38,16 +37,6 @@ namespace EasyDataAccess
         #endregion
 
         #region Constructor
-
-        public EasyDataAccessIntance()
-        {
-
-        }
-
-        public EasyDataAccessIntance(string connectionString)
-        {
-            this.ConnectionString = connectionString;
-        }
 
         public EasyDataAccessIntance(IDbConnection connection)
         {
@@ -75,10 +64,25 @@ namespace EasyDataAccess
             {
                 if (disposing)
                 {
-                    CloseConnection();
+                    DisposeObjects();
                 }
 
                 this.disposed = true;
+            }
+        }
+
+        private void DisposeObjects()
+        {
+            if (this.Command != null)
+            {
+                this.Command.Dispose();
+                this.Command = null;
+            }
+
+            if (this.Transaction != null)
+            {
+                this.Transaction.Dispose();
+                this.Transaction = null;
             }
         }
 
@@ -86,131 +90,24 @@ namespace EasyDataAccess
 
         #region Connection
 
-        public IDbConnection CreateConnection()
-        {
-            if (CkeckConnectionString(this.ConnectionString))
-            {
-                this.Connection = CreateConnectionSqlServer(this.ConnectionString);
-                CreateCommand();
-            }
-
-            return this.Connection;
-        }
-
-        public IDbConnection CreateConnection(string connectionString)
-        {
-            if (CkeckConnectionString(connectionString))
-            {
-                this.Connection = CreateConnectionSqlServer(connectionString);
-                CreateCommand();
-            }
-
-            return this.Connection;
-        }
-
-        public IDbConnection CreateConnection(IDbConnection connection)
-        {
-
-            if (connection.State != ConnectionState.Open)
-                connection.Open();
-
-            this.Connection = connection;
-            CreateCommand();
-
-            return this.Connection;
-        }
-
-        public async Task<IDbConnection> CreateConnectionAsync()
-        {
-            if (CkeckConnectionString(this.ConnectionString))
-            {
-                this.Connection = await CreateConnectionSqlServerAsync(this.ConnectionString);
-                CreateCommand();
-            }
-
-            return this.Connection;
-        }
-
-        public async Task<IDbConnection> CreateConnectionAsync(string connectionString)
-        {
-            if (CkeckConnectionString(connectionString))
-            {
-                this.Connection = await CreateConnectionSqlServerAsync(connectionString);
-                CreateCommand();
-            }
-
-            return this.Connection;
-        }
-
-        private IDbConnection CreateConnectionSqlServer(string connectionString)
-        {
-            SqlConnection sqlConnection = new SqlConnection(connectionString);
-
-            if (sqlConnection.State != ConnectionState.Open)
-                sqlConnection.Open();
-
-            this.ConnectionString = connectionString;
-            this.Connection = sqlConnection;
-
-            return this.Connection;
-        }
-
-        private async Task<IDbConnection> CreateConnectionSqlServerAsync(string connectionString)
-        {
-            SqlConnection sqlConnection = new SqlConnection(connectionString);
-
-            if (sqlConnection.State != ConnectionState.Open)
-                await sqlConnection.OpenAsync();
-
-            this.ConnectionString = connectionString;
-            this.Connection = sqlConnection;
-
-            return this.Connection;
-        }
-
-        private bool CkeckConnectionString(string connectionString)
-        {
-            if (string.IsNullOrEmpty(connectionString))
-                return false;
-            else
-                return true;
-        }
-
         public IDbConnection GetConnection()
         {
             return this.Connection;
-        }
-
-        public void CloseConnection()
-        {
-            if (this.Connection != null && this.Connection.State == ConnectionState.Open)
-            {
-                this.Connection.Close();
-                this.Connection.Dispose();
-                this.Connection = null;
-            }
         }
 
         #endregion
 
         #region Transaction
 
-        public void ClearTransaction()
-        {
-            if (this.Command.Transaction != null)
-                this.Command.Transaction.Dispose();
-                this.Command.Transaction = null;
-
-            if (this.Transaction != null)
-                this.Transaction.Dispose();
-                this.Transaction = null;
-        }
-
         public void BeginTransaction()
         {
             if (this.Transaction == null)
             {
                 this.Transaction = this.Connection.BeginTransaction();
+
+                if (this.Command == null)
+                    this.CreateCommand();
+
                 this.Command.Transaction = this.Transaction;
             }
         }
@@ -230,6 +127,21 @@ namespace EasyDataAccess
             {
                 this.Command.Transaction.Rollback();
                 ClearTransaction();
+            }
+        }
+
+        public void ClearTransaction()
+        {
+            if (this.Command.Transaction != null)
+            {
+                this.Command.Transaction.Dispose();
+                this.Command.Transaction = null;
+            }
+
+            if (this.Transaction != null)
+            {
+                this.Transaction.Dispose();
+                this.Transaction = null;
             }
         }
 
@@ -353,19 +265,12 @@ namespace EasyDataAccess
             return ((IDataParameter)instance).Value;
         }
 
-        public void CheckCommandIsNotNull()
-        {
-            if (this.Command == null)
-                throw new Exception("Command must be informed. Example: Use SetQuery ou SetStoredProcedure");
-        }
-
         #endregion
 
         #region ExecuteReader
 
         public IDataReader ExecuteReader()
         {
-            CheckCommandIsNotNull();
             ConfigureCommand();
             return this.Command.ExecuteReader();
         }
@@ -373,7 +278,6 @@ namespace EasyDataAccess
         public List<T> ExecuteReader<T>()
         {
             List<T> lst = new List<T>();
-            CheckCommandIsNotNull();
             ConfigureCommand();
             using (IDataReader dr = this.Command.ExecuteReader())
             {
@@ -402,7 +306,6 @@ namespace EasyDataAccess
 
         public int ExecuteNonQuery()
         {
-            CheckCommandIsNotNull();
             ConfigureCommand();
             return this.Command.ExecuteNonQuery();
         }
@@ -418,14 +321,12 @@ namespace EasyDataAccess
 
         public object ExecuteScalar()
         {
-            CheckCommandIsNotNull();
             ConfigureCommand();
             return this.Command.ExecuteScalar();
         }
 
         public T ExecuteScalar<T>()
         {
-            CheckCommandIsNotNull();
             ConfigureCommand();
             return (T)this.Command.ExecuteScalar();
         }
