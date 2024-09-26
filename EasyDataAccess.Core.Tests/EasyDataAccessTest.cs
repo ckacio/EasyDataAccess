@@ -41,7 +41,7 @@ namespace EasyDataAccess.Core.Tests
         [TestMethod]
         public void EasyDataAccess_CreateConnection_Erro()
         {
-            //Will get a Exception because the ConnectionString needs to be informed on constructor! Example: new DataAccess(connectionString) or new DataAccess(connection)
+            //Will get a Exception because the ConnectionString needs to be informed on constructor! 
             try
             {
                 using (var db = _eda1.CreateConnection("WorldCartoon", ""))
@@ -287,8 +287,6 @@ namespace EasyDataAccess.Core.Tests
                 {
                     Debug.WriteLine(string.Format($"{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
                 }
-
-                //db.CloseConnection();
             }
             catch (Exception ex)
             {
@@ -331,8 +329,6 @@ namespace EasyDataAccess.Core.Tests
                 {
                     Debug.WriteLine(string.Format($"{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
                 }
-
-                //db.CloseConnection();
             }
             catch
             {
@@ -371,8 +367,6 @@ namespace EasyDataAccess.Core.Tests
                 {
                     Debug.WriteLine(string.Format($"{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
                 }
-
-                //db.CloseConnection();
             }
             catch
             {
@@ -414,8 +408,6 @@ namespace EasyDataAccess.Core.Tests
                 {
                     Debug.WriteLine(string.Format($"{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
                 }
-
-                //db.CloseConnection();
             }
             catch
             {
@@ -451,8 +443,6 @@ namespace EasyDataAccess.Core.Tests
                 {
                     Debug.WriteLine(string.Format($"{0}-{1}-{2}", cartoon.CartoonId, cartoon.NameCharacter, cartoon.Description));
                 }
-
-                //db.CloseConnection();
             }
             catch (Exception ex)
             {
@@ -487,8 +477,6 @@ namespace EasyDataAccess.Core.Tests
                 var rowsAffected = db.ExecuteNonQuery();
 
                 Debug.WriteLine(string.Format("Rows Affected-{0}", rowsAffected));
-
-                //db.CloseConnection();
             }
             catch
             {
