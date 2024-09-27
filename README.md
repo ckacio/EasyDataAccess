@@ -10,5 +10,8 @@ also generates data access code and automatically performs the mapping between d
 <img src="https://github.com/user-attachments/assets/d19cb5a5-9ac8-4e06-b492-269ad80f2a29">
 <br>
 
-
+<h3>Auto mapping between data and objects</h3><br>
+Return a List of T <br><br>
+<img src="https://github.com/user-attachments/assets/e9c8023f-d7d2-4421-b8d5-a254d4157a4e">
+<br>
 
