@@ -131,7 +131,7 @@ namespace EasyDataAccess.Core.Tests
                 //Creates a new connection
                 using (var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString))
                 {
-                    //Use to set a query 
+                    //Use to set a Stored Procedure 
                     db.SetStoredProcedure("SEL_Cartoon");
 
                     //Traditional way
@@ -199,7 +199,7 @@ namespace EasyDataAccess.Core.Tests
                 //Creates a new connection
                 using (var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString))
                 {
-                    //Use to set a query 
+                    //Use to set a Stored Procedure 
                     db.SetStoredProcedure("SEL_Cartoon");
 
                     //Traditional way
@@ -272,7 +272,7 @@ namespace EasyDataAccess.Core.Tests
                 //Creates a new connection
                 var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString);
 
-                //Use to set a query 
+                //Use to set a Stored Procedure 
                 db.SetStoredProcedure("SEL_Cartoon");
 
                 //Use to force map between entity field and database field returned. Only if necessary where they are different! 
@@ -456,13 +456,13 @@ namespace EasyDataAccess.Core.Tests
         }
 
         [TestMethod]
-        public void EasyDataAccess_SetQuery_Insert_WithParameters_ExecuteNoQuery()
+        public async Task EasyDataAccess_SetQuery_Insert_WithParameters_ExecuteNoQuery()
         {
             var testeOk = true;
 
             try
             {
-                var db = _eda2.CreateConnection("WorldCartoon", _connectionString);
+                var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString);
 
                 //Use to set a query 
                 db.SetQuery(@"insert into Cartoon (Name_Cartoon,Country) 
@@ -474,7 +474,7 @@ namespace EasyDataAccess.Core.Tests
                 db.SetParameter("@Country", "Japan");
 
                 //Returns the number of rows affected
-                var rowsAffected = db.ExecuteNonQuery();
+                var rowsAffected = await db.ExecuteNonQueryAsync();
 
                 Debug.WriteLine(string.Format("Rows Affected-{0}", rowsAffected));
             }
@@ -571,7 +571,6 @@ namespace EasyDataAccess.Core.Tests
 
             using (var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString))
             {
-
                 try
                 {
                     db.BeginTransaction();
@@ -599,8 +598,6 @@ namespace EasyDataAccess.Core.Tests
                 catch
                 {
                     db.RollbackTransaction();
-
-                    testeOk = false;
                 }
             }
 
