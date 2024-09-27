@@ -623,6 +623,4 @@ namespace EasyDataAccess.Core.Tests
         public string NameCharacter { get; set; }
         public string Description { get; set; }
     }
-
-
 }
