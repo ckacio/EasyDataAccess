@@ -11,7 +11,7 @@ Uses the Single Connection approach, avoiding opening and closing connections.  
 <br>
 
 <h3>Set a Stored Procedure</h3><br>
-<img src="https://github.com/user-attachments/assets/d19cb5a5-9ac8-4e06-b492-269ad80f2a29">
+<img src="https://github.com/user-attachments/assets/58265f0c-5268-4334-856c-ad1c660d16ac">
 <br>
 
 <h3>Auto mapping between data and objects</h3><br>
