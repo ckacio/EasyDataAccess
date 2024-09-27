@@ -15,7 +15,7 @@ also generates data access code and automatically performs the mapping between d
 
 <h3>Auto mapping between data and objects</h3><br>
 Return a List of T <br><br>
-<img src="https://github.com/user-attachments/assets/e9c8023f-d7d2-4421-b8d5-a254d4157a4e">
+<img src="https://github.com/user-attachments/assets/e0468c3c-3ad5-461a-a1fd-ad4472ac270c">
 <br>
 
 <h3>Using SetMap</h3><br>
