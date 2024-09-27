@@ -18,6 +18,10 @@ Return a List of T <br><br>
 <img src="https://github.com/user-attachments/assets/e9c8023f-d7d2-4421-b8d5-a254d4157a4e">
 <br>
 
+<h3>Using SetMap</h3><br>
+<img src="https://github.com/user-attachments/assets/960c8784-2d58-49c0-8c4f-f0c4884c29e7">
+<br>
+
 <h3>Using Transaction</h3><br>
 <img src="https://github.com/user-attachments/assets/393f8c63-41fb-479c-b265-20be876e6eab">
 <br>
