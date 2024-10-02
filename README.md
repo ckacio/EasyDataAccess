@@ -1,7 +1,11 @@
 <h1>EasyDataAccess - Micro ORM<h1></h1> 
-Is a simple tool that helps simplify the creation of a data access layer, automates data access, <br>
-also generates data access code and automatically performs the mapping between data and objects.<br>
-Uses the Single Connection approach, avoiding opening and closing connections.  Gaining speed on subsequent calls.<br>
+It's a simple tool that helps simplify and automate the creation of a SQL Server data access layer. <br>
+It also automatically performs the mapping between database data and object entities.<br>
+It uses the Single Connection approach, avoiding opening and closing connections, which offers a speed gain in subsequent calls.<br><br>
+
+É uma ferramenta simples que ajuda a simplificar e automatizar a criação de uma camada de acesso a dados SQL Server. <br>
+Também realiza automaticamente o mapeamento entre dados de banco e entidades objetos.<br>
+Utiliza a abordagem de Conexão Única, evitando abrir e fechar conexões, o que oferece um ganho de velocidade nas chamadas subsequentes. <br><br> 
 
 <h3>Set a query</h3><br>
 <img src="https://github.com/user-attachments/assets/9569d06f-c41d-4502-92f5-4cb70f3d2f40">
