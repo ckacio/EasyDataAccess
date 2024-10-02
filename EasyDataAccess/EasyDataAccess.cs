@@ -41,26 +41,23 @@ namespace EasyDataAccess
 
         #region Connection
 
-        public IDbConnection GetConnection(string connectionName)
+        public IDbConnection GetConnection(string connectionString)
         {
-            if (string.IsNullOrEmpty(connectionName))
-                throw new Exception("The ConnectionName needs to be informed!");
-
-            if (!this.dcConnection.ContainsKey(connectionName))
+            if (!this.dcConnection.ContainsKey(CheckConnectionString(connectionString)))
                 return null;
 
-            return dcConnection[connectionName];
+            return dcConnection[connectionString];
         }
 
-        public EasyDataAccessIntance CreateConnection(string connectionName, string connectionString, EasyDataAccessType easyDataAccessType = EasyDataAccessType.SqlServer)
+        public EasyDataAccessIntance CreateConnection(string connectionString, EasyDataAccessType easyDataAccessType = EasyDataAccessType.SqlServer)
         {
-            var con = this.GetConnection(connectionName);
+            var con = this.GetConnection(connectionString);
             EasyDataAccessIntance instance = null;
 
             if (easyDataAccessType == EasyDataAccessType.SqlServer)
             {
                 if (con == null)
-                    con = CreateConnectionSqlServer(connectionName, connectionString);
+                    con = CreateConnectionSqlServer(connectionString);
 
                 instance = new EasyDataAccessIntance(con);
             }
@@ -72,15 +69,15 @@ namespace EasyDataAccess
             return instance;
         }
 
-        public EasyDataAccessIntance CreateConnection(string connectionName, IDbConnection connection)
+        public EasyDataAccessIntance CreateConnection(IDbConnection connection)
         {
             {
-                var con = this.GetConnection(connectionName);
+                var con = this.GetConnection(connection.ConnectionString);
 
                 if (con == null)
                 {
                     con = connection;
-                    this.dcConnection.Add(connectionName, connection);
+                    this.dcConnection.Add(connection.ConnectionString, connection);
                 }
 
                 return new EasyDataAccessIntance(con);
@@ -88,15 +85,15 @@ namespace EasyDataAccess
             }
         }
 
-        public async Task<EasyDataAccessIntance> CreateConnectionAsync(string connectionName, string connectionString, EasyDataAccessType easyDataAccessType = EasyDataAccessType.SqlServer)
+        public async Task<EasyDataAccessIntance> CreateConnectionAsync(string connectionString, EasyDataAccessType easyDataAccessType = EasyDataAccessType.SqlServer)
         {
-            var con = this.GetConnection(connectionName);
+            var con = this.GetConnection(connectionString);
             EasyDataAccessIntance instance = null;
 
             if (easyDataAccessType == EasyDataAccessType.SqlServer)
             {
                 if (con == null)
-                    con = await CreateConnectionSqlServerAsync(connectionName, connectionString);
+                    con = await CreateConnectionSqlServerAsync(connectionString);
 
                 instance = new EasyDataAccessIntance(con);
             }
@@ -108,61 +105,41 @@ namespace EasyDataAccess
             return instance;
         }
 
-        public async Task<EasyDataAccessIntance> CreateConnectionAsync(string connectionName, IDbConnection connection)
+        public async Task<EasyDataAccessIntance> CreateConnectionAsync(IDbConnection connection)
         {
-            return await Task.Run(() => CreateConnection(connectionName,connection));
+            return await Task.Run(() => CreateConnection(connection));
         }
 
-        private IDbConnection CreateConnectionSqlServer(string connectionName, string connectionString)
+        private IDbConnection CreateConnectionSqlServer(string connectionString)
         {
-            SqlConnection sqlConnection = new SqlConnection(SetConnectionString(connectionString));
+            SqlConnection sqlConnection = new SqlConnection(CheckConnectionString(connectionString));
 
             if (sqlConnection.State != ConnectionState.Open)
                 sqlConnection.Open();
 
-            this.dcConnection.Add(connectionName, sqlConnection);
+            this.dcConnection.Add(connectionString, sqlConnection);
 
-            return this.GetConnection(connectionName);
+            return this.GetConnection(connectionString);
         }
 
-        private async Task<IDbConnection> CreateConnectionSqlServerAsync(string connectionName, string connectionString)
+        private async Task<IDbConnection> CreateConnectionSqlServerAsync(string connectionString)
         {
-            SqlConnection sqlConnection = new SqlConnection(SetConnectionString(connectionString));
+            SqlConnection sqlConnection = new SqlConnection(CheckConnectionString(connectionString));
 
             if (sqlConnection.State != ConnectionState.Open)
                 await sqlConnection.OpenAsync();
 
-            this.dcConnection.Add(connectionName, sqlConnection);
+            this.dcConnection.Add(connectionString, sqlConnection);
 
-            return this.GetConnection(connectionName);
+            return this.GetConnection(connectionString);
         }
 
-        public void CloseConnection(string connectionName)
-        {
-            if (this.dcConnection.ContainsKey(connectionName) && this.dcConnection[connectionName].State == ConnectionState.Open)
-            {
-                this.dcConnection[connectionName].Close();
-            }
-        }
-
-        private string SetConnectionStringApplicationName(string connectionString)
-        {
-            if (!connectionString.Contains("Application Name"))
-            {
-                return connectionString = "Application Name = 'EasyDataAccess Micro ORM';" + connectionString;
-            }
-            else
-            {
-                return connectionString;
-            }
-        }
-
-        private string SetConnectionString(string connectionString)
+        private string CheckConnectionString(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new Exception("The ConnectionString needs to be informed!");
 
-            return SetConnectionStringApplicationName(connectionString);
+            return connectionString;
         }
 
         #endregion

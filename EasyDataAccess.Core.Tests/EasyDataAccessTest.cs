@@ -23,7 +23,7 @@ namespace EasyDataAccess.Core.Tests
         [TestMethod]
         public void EasyDataAccess_CreateConnection()
         {
-            using (var db = _eda2.CreateConnection("WorldCartoon", _connectionString))
+            using (var db = _eda2.CreateConnection(_connectionString))
             {
                 Assert.IsTrue(db.GetType().Name == "EasyDataAccessIntance");
             }
@@ -32,7 +32,7 @@ namespace EasyDataAccess.Core.Tests
         [TestMethod]
         public async Task EasyDataAccess_CreateConnectionAsync()
         {
-            using (var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString))
+            using (var db = await _eda2.CreateConnectionAsync(_connectionString))
             {
                 Assert.IsTrue(db.GetType().Name == "EasyDataAccessIntance");
             }
@@ -44,7 +44,7 @@ namespace EasyDataAccess.Core.Tests
             //Will get a Exception because the ConnectionString needs to be informed on constructor! 
             try
             {
-                using (var db = _eda1.CreateConnection("WorldCartoon", ""))
+                using (var db = _eda1.CreateConnection(""))
                 {
                     Assert.IsTrue(db.GetType().Name == "EasyDataAccessIntance");
                 }
@@ -59,7 +59,7 @@ namespace EasyDataAccess.Core.Tests
         [TestMethod]
         public void EasyDataAccess_CreateConnection_ConnectionString()
         {
-            using (var db = _eda1.CreateConnection("WorldCartoon", _connectionString))
+            using (var db = _eda1.CreateConnection(_connectionString))
             {
                 Assert.IsTrue(db.GetType().Name == "EasyDataAccessIntance");
             }
@@ -68,7 +68,7 @@ namespace EasyDataAccess.Core.Tests
         [TestMethod]
         public async Task EasyDataAccess_CreateConnectionAsync_ConnectionString()
         {
-            using (var db = await _eda1.CreateConnectionAsync("WorldCartoon", _connectionString))
+            using (var db = await _eda1.CreateConnectionAsync(_connectionString))
             {
                 Assert.IsTrue(db.GetType().Name == "EasyDataAccessIntance");
             }
@@ -80,7 +80,7 @@ namespace EasyDataAccess.Core.Tests
             var sqlConecction = new SqlConnection(_connectionString);
             sqlConecction.Open();
 
-            using (var db = _eda2.CreateConnection("WorldCartoon", sqlConecction))
+            using (var db = _eda2.CreateConnection(sqlConecction))
             {
                 Assert.IsTrue(db.GetType().Name == "EasyDataAccessIntance");
             }
@@ -94,7 +94,7 @@ namespace EasyDataAccess.Core.Tests
             try
             {
                 //Creates a new connection
-                using (var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString))
+                using (var db = await _eda2.CreateConnectionAsync(_connectionString))
                 {
 
                     //Use to set a query 
@@ -129,7 +129,7 @@ namespace EasyDataAccess.Core.Tests
             try
             {
                 //Creates a new connection
-                using (var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString))
+                using (var db = await _eda2.CreateConnectionAsync(_connectionString))
                 {
                     //Use to set a Stored Procedure 
                     db.SetStoredProcedure("SEL_Cartoon");
@@ -163,7 +163,7 @@ namespace EasyDataAccess.Core.Tests
             try
             {
                 //Creates a new connection
-                using (var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString))
+                using (var db = await _eda2.CreateConnectionAsync(_connectionString))
                 {
                     //Use to set a query 
                     db.SetQuery("Select Cartoon_Id,Name_Cartoon,Country From Cartoon");
@@ -197,7 +197,7 @@ namespace EasyDataAccess.Core.Tests
             try
             {
                 //Creates a new connection
-                using (var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString))
+                using (var db = await _eda2.CreateConnectionAsync(_connectionString))
                 {
                     //Use to set a Stored Procedure 
                     db.SetStoredProcedure("SEL_Cartoon");
@@ -207,7 +207,7 @@ namespace EasyDataAccess.Core.Tests
                     {
                         while (dr.Read())
                         {
-                            Debug.WriteLine(string.Format($"{0}-{1}-{2}", dr["Cartoon_Id"], dr["Name_Cartoon"], dr["Country"]));
+                            Debug.WriteLine(string.Format("{0}-{1}-{2}", dr["Cartoon_Id"], dr["Name_Cartoon"], dr["Country"]));
                         }
                     }
                 }
@@ -231,7 +231,7 @@ namespace EasyDataAccess.Core.Tests
             try
             {
                 //Creates a new connection
-                using (var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString))
+                using (var db = await _eda2.CreateConnectionAsync(_connectionString))
                 {
                     //Use to set a query 
                     db.SetQuery("Select Cartoon_Id,Name_Cartoon,Country From Cartoon");
@@ -270,13 +270,13 @@ namespace EasyDataAccess.Core.Tests
             try
             {
                 //Creates a new connection
-                var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString);
+                var db = await _eda2.CreateConnectionAsync(_connectionString);
 
                 //Use to set a Stored Procedure 
                 db.SetStoredProcedure("SEL_Cartoon");
 
                 //Use to force map between entity field and database field returned. Only if necessary where they are different! 
-                db.SetMap("Name_Cartoon", "Name");
+                db.SetMap("Name", "Name_Cartoon");
 
                 //If the entity field and the database field are the same, the mapping will be automatic.
                 //It compares by removing the "_" signs and putting everything in lowercase and compares to see if they are the same
@@ -285,7 +285,7 @@ namespace EasyDataAccess.Core.Tests
 
                 foreach (var cartoon in cartoons)
                 {
-                    Debug.WriteLine(string.Format($"{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
+                    Debug.WriteLine(string.Format("{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
                 }
             }
             catch (Exception ex)
@@ -306,7 +306,7 @@ namespace EasyDataAccess.Core.Tests
 
             try
             {
-                var db = _eda2.CreateConnection("WorldCartoon", _connectionString);
+                var db = _eda2.CreateConnection(_connectionString);
 
                 //Use to set a query 
                 db.SetQuery("Select Cartoon_Id,Name_Cartoon,Country From Cartoon where Cartoon_Id = @Id ");
@@ -315,7 +315,7 @@ namespace EasyDataAccess.Core.Tests
                 db.SetParameter("@Id", "2");
 
                 //Use to force map between entity field and database field returned. Only if necessary where they are different!
-                db.SetMap("Name_Cartoon", "Name");
+                db.SetMap("Name", "Name_Cartoon");
 
                 //Use to fixed a value on entity field returned. Only if necessary!  
                 db.SetFixedValue("Country", "BR");
@@ -327,7 +327,7 @@ namespace EasyDataAccess.Core.Tests
 
                 foreach (var cartoon in cartoons)
                 {
-                    Debug.WriteLine(string.Format($"{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
+                    Debug.WriteLine(string.Format("{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
                 }
             }
             catch
@@ -347,7 +347,7 @@ namespace EasyDataAccess.Core.Tests
 
             try
             {
-                var db = _eda2.CreateConnection("WorldCartoon", _connectionString);
+                var db = _eda2.CreateConnection(_connectionString);
 
                 //Use to set a query 
                 db.SetStoredProcedure("SEL_Cartoon");
@@ -356,7 +356,7 @@ namespace EasyDataAccess.Core.Tests
                 db.SetParameter("@Country", "USA");
 
                 //Use to force map between entity field and database field returned. Only if necessary where they are different!
-                db.SetMap("Name_Cartoon", "Name");
+                db.SetMap("Name", "Name_Cartoon");
 
                 //If the entity field and the database field are the same, the mapping will be automatic.
                 //It compares by removing the "_" signs and putting everything in lowercase and compares to see if they are the same
@@ -365,7 +365,7 @@ namespace EasyDataAccess.Core.Tests
 
                 foreach (var cartoon in cartoons)
                 {
-                    Debug.WriteLine(string.Format($"{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
+                    Debug.WriteLine(string.Format("{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
                 }
             }
             catch
@@ -385,7 +385,7 @@ namespace EasyDataAccess.Core.Tests
 
             try
             {
-                var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString);
+                var db = await _eda2.CreateConnectionAsync(_connectionString);
 
                 //Use to set a query 
                 db.SetQuery("Select Cartoon_Id,Name_Cartoon,Country From Cartoon where Cartoon_Id = @Id ");
@@ -394,7 +394,7 @@ namespace EasyDataAccess.Core.Tests
                 db.SetParameter("@Id", "2");
 
                 //Use to force map between entity field and database field returned. Only if necessary where they are different!
-                db.SetMap("Name_Cartoon", "Name");
+                db.SetMap("Name", "Name_Cartoon");
 
                 //Use to fixed a value on entity field returned. Only if necessary!  
                 db.SetFixedValue("Country", "ESP");
@@ -406,7 +406,7 @@ namespace EasyDataAccess.Core.Tests
 
                 foreach (var cartoon in cartoons)
                 {
-                    Debug.WriteLine(string.Format($"{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
+                    Debug.WriteLine(string.Format("{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
                 }
             }
             catch
@@ -426,7 +426,7 @@ namespace EasyDataAccess.Core.Tests
 
             try
             {
-                var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString);
+                var db = await _eda2.CreateConnectionAsync(_connectionString);
 
                 //Use to set a query 
                 db.SetStoredProcedure("SEL_CartoonCharacter");
@@ -441,7 +441,7 @@ namespace EasyDataAccess.Core.Tests
 
                 foreach (var cartoon in cartoons)
                 {
-                    Debug.WriteLine(string.Format($"{0}-{1}-{2}", cartoon.CartoonId, cartoon.NameCharacter, cartoon.Description));
+                    Debug.WriteLine(string.Format("{0}-{1}-{2}", cartoon.CartoonId, cartoon.NameCharacter, cartoon.Description));
                 }
             }
             catch (Exception ex)
@@ -462,7 +462,7 @@ namespace EasyDataAccess.Core.Tests
 
             try
             {
-                var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString);
+                var db = await _eda2.CreateConnectionAsync(_connectionString);
 
                 //Use to set a query 
                 db.SetQuery(@"insert into Cartoon (Name_Cartoon,Country) 
@@ -495,7 +495,7 @@ namespace EasyDataAccess.Core.Tests
 
             try
             {
-                using (var db = _eda2.CreateConnection("WorldCartoon", _connectionString))
+                using (var db = _eda2.CreateConnection(_connectionString))
                 {
 
                     //Use to set a Stored Procedure 
@@ -535,7 +535,7 @@ namespace EasyDataAccess.Core.Tests
 
             try
             {
-                using (var db = _eda2.CreateConnection("WorldCartoon", _connectionString))
+                using (var db = _eda2.CreateConnection(_connectionString))
                 {
 
                     //Use to set a query 
@@ -569,7 +569,7 @@ namespace EasyDataAccess.Core.Tests
         {
             var testeOk = true;
 
-            using (var db = await _eda2.CreateConnectionAsync("WorldCartoon", _connectionString))
+            using (var db = await _eda2.CreateConnectionAsync(_connectionString))
             {
                 try
                 {
