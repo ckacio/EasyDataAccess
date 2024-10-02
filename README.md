@@ -1,7 +1,6 @@
 <h1>EasyDataAccess - Micro ORM<h1></h1> 
 It's a simple tool that helps simplify and automate the creation of a SQL Server data access layer. <br>
 It also automatically performs the mapping between database data and object entities.<br>
-It uses the Single Connection approach, avoiding opening and closing connections, which offers a speed gain in subsequent calls.<br><br>
 
 <h3>Set a query</h3><br>
 <img src="https://github.com/user-attachments/assets/9569d06f-c41d-4502-92f5-4cb70f3d2f40">
