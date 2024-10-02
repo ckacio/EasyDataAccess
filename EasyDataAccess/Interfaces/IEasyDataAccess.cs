@@ -23,13 +23,15 @@ namespace DataAccess.Interfaces
 
         IDbConnection GetConnection(string connectionString);
 
-        EasyDataAccessIntance CreateConnection(string connectionString, EasyDataAccessType easyDataAccessType = EasyDataAccessType.SqlServer);
+        EasyDataAccessIntance CreateConnection(string connectionString);
 
         EasyDataAccessIntance CreateConnection(IDbConnection connection);
 
-        Task<EasyDataAccessIntance> CreateConnectionAsync(string connectionString, EasyDataAccessType easyDataAccessType = EasyDataAccessType.SqlServer);
+        Task<EasyDataAccessIntance> CreateConnectionAsync(string connectionString, EasyDataAccessTypeConnection easyDataAccessType = EasyDataAccessTypeConnection.SqlServer);
 
         Task<EasyDataAccessIntance> CreateConnectionAsync(IDbConnection connection);
+
+        void SetEasyDataAccessTypeConnection(EasyDataAccessTypeConnection easyDataAccessTypeConnection);
 
         #endregion
     }

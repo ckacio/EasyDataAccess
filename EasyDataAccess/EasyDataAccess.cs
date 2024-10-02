@@ -22,6 +22,8 @@ namespace EasyDataAccess
 
         private Dictionary<string, IDbConnection> dcConnection = new Dictionary<string, IDbConnection>();
 
+        private EasyDataAccessTypeConnection easyDataAccessTypeConnection = EasyDataAccessTypeConnection.SqlServer;
+
         #endregion
 
         #region Constructor Singleton
@@ -50,12 +52,12 @@ namespace EasyDataAccess
             return dcConnection[connectionString];
         }
 
-        public EasyDataAccessIntance CreateConnection(string connectionString, EasyDataAccessType easyDataAccessType = EasyDataAccessType.SqlServer)
+        public EasyDataAccessIntance CreateConnection(string connectionString)
         {
             var con = this.GetConnection(connectionString);
             EasyDataAccessIntance instance = null;
 
-            if (easyDataAccessType == EasyDataAccessType.SqlServer)
+            if (easyDataAccessTypeConnection == EasyDataAccessTypeConnection.SqlServer)
             {
                 if (con == null)
                     con = CreateConnectionSqlServer(connectionString);
@@ -64,7 +66,7 @@ namespace EasyDataAccess
             }
             else
             {
-                throw new Exception($"EasyDataAccessType {easyDataAccessType} not yet implemented!");
+                throw new Exception($"EasyDataAccessType {easyDataAccessTypeConnection} not yet implemented!");
             }
 
             return instance;
@@ -86,12 +88,12 @@ namespace EasyDataAccess
             }
         }
 
-        public async Task<EasyDataAccessIntance> CreateConnectionAsync(string connectionString, EasyDataAccessType easyDataAccessType = EasyDataAccessType.SqlServer)
+        public async Task<EasyDataAccessIntance> CreateConnectionAsync(string connectionString, EasyDataAccessTypeConnection easyDataAccessType = EasyDataAccessTypeConnection.SqlServer)
         {
             var con = this.GetConnection(connectionString);
             EasyDataAccessIntance instance = null;
 
-            if (easyDataAccessType == EasyDataAccessType.SqlServer)
+            if (easyDataAccessType == EasyDataAccessTypeConnection.SqlServer)
             {
                 if (con == null)
                     con = await CreateConnectionSqlServerAsync(connectionString);
@@ -141,6 +143,11 @@ namespace EasyDataAccess
                 throw new Exception("The ConnectionString needs to be informed!");
 
             return connectionString;
+        }
+
+        public void SetEasyDataAccessTypeConnection(EasyDataAccessTypeConnection easyDataAccessTypeConnection)
+        {
+            this.easyDataAccessTypeConnection = easyDataAccessTypeConnection;
         }
 
         #endregion
