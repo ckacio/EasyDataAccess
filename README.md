@@ -1,28 +1,30 @@
 <h1>EasyDataAccess - Micro ORM<h1></h1> 
-Is a simple tool that helps simplify the creation of a data access layer, automates data access, <br>
-also generates data access code and automatically performs the mapping between data and objects.<br>
-Uses the Single Connection approach, avoiding opening and closing connections.  Gaining speed on subsequent calls.<br>
+It's a simple tool that helps simplify and automate the creation of a SQL Server data access layer. <br>
+It also automatically performs the mapping between database data and object entities.<br>
+It uses the Single Connection approach, avoiding opening and closing connections, which offers a speed gain in subsequent calls.<br><br>
 
 <h3>Set a query</h3><br>
-<img src="https://github.com/user-attachments/assets/3a23aaad-e4b3-40e3-8e12-60d03c6803fb">
+<img src="https://github.com/user-attachments/assets/9569d06f-c41d-4502-92f5-4cb70f3d2f40">
 
 <h3>Set a query with parameters</h3><br>
-<img src="https://github.com/user-attachments/assets/ebf75995-ff48-4fd9-9a32-933f384802f6">
+<img src="https://github.com/user-attachments/assets/656ce8b3-bede-4dc3-9d52-2ae404bff74c">
 <br>
 
 <h3>Set a Stored Procedure</h3><br>
-<img src="https://github.com/user-attachments/assets/58265f0c-5268-4334-856c-ad1c660d16ac">
+<img src="https://github.com/user-attachments/assets/389bd8ae-6c8f-4325-b0f7-3cf42df263b5">
 <br>
 
 <h3>Auto mapping between data and objects</h3><br>
 Return a List of T <br><br>
-<img src="https://github.com/user-attachments/assets/e0468c3c-3ad5-461a-a1fd-ad4472ac270c">
+<img src="https://github.com/user-attachments/assets/0e2fb91c-e89f-4894-97ba-dd6666f54876"><br><br>
+List Returned <br><br>
+<img src="https://github.com/user-attachments/assets/45da1123-4d6d-4020-9db6-96d064450205">
 <br>
 
 <h3>Using SetMap</h3><br>
-<img src="https://github.com/user-attachments/assets/960c8784-2d58-49c0-8c4f-f0c4884c29e7">
+<img src="https://github.com/user-attachments/assets/fa469d7c-58d7-4ed4-8b07-30f4c51827a0">
 <br>
 
 <h3>Using Transaction</h3><br>
-<img src="https://github.com/user-attachments/assets/393f8c63-41fb-479c-b265-20be876e6eab">
+<img src="https://github.com/user-attachments/assets/8b9ca93e-eb84-43f7-a77a-375774b2a997">
 <br>
