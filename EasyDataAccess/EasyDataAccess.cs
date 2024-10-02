@@ -14,15 +14,11 @@ using DataAccess.Extentions;
 namespace EasyDataAccess
 {
 
-    public class EasyDataAccess: IEasyDataAccess
+    public class EasyDataAccess: IDisposable, IEasyDataAccess
     {
         #region Private Variables
 
         private static EasyDataAccess instance;
-
-        private Dictionary<string, IDbConnection> dcConnection = new Dictionary<string, IDbConnection>();
-
-        private EasyDataAccessTypeConnection easyDataAccessTypeConnection = EasyDataAccessTypeConnection.SqlServer;
 
         #endregion
 
@@ -42,114 +38,48 @@ namespace EasyDataAccess
 
         #endregion
 
-        #region Connection
+        #region Dispose
 
-        public IDbConnection GetConnection(string connectionString)
+        public void Dispose()
         {
-            if (!this.dcConnection.ContainsKey(CheckConnectionString(connectionString)))
-                return null;
-
-            return dcConnection[connectionString];
-        }
-
-        public EasyDataAccessIntance CreateConnection(string connectionString)
-        {
-            var con = this.GetConnection(connectionString);
-            EasyDataAccessIntance instance = null;
-
-            if (easyDataAccessTypeConnection == EasyDataAccessTypeConnection.SqlServer)
-            {
-                if (con == null)
-                    con = CreateConnectionSqlServer(connectionString);
-
-                instance = new EasyDataAccessIntance(con);
-            }
-            else
-            {
-                throw new Exception($"EasyDataAccessType {easyDataAccessTypeConnection} not yet implemented!");
-            }
-
-            return instance;
-        }
-
-        public EasyDataAccessIntance CreateConnection(IDbConnection connection)
-        {
-            {
-                var con = this.GetConnection(connection.ConnectionString);
-
-                if (con == null)
-                {
-                    con = connection;
-                    this.dcConnection.Add(connection.ConnectionString, connection);
-                }
-
-                return new EasyDataAccessIntance(con);
-
-            }
-        }
-
-        public async Task<EasyDataAccessIntance> CreateConnectionAsync(string connectionString, EasyDataAccessTypeConnection easyDataAccessType = EasyDataAccessTypeConnection.SqlServer)
-        {
-            var con = this.GetConnection(connectionString);
-            EasyDataAccessIntance instance = null;
-
-            if (easyDataAccessType == EasyDataAccessTypeConnection.SqlServer)
-            {
-                if (con == null)
-                    con = await CreateConnectionSqlServerAsync(connectionString);
-
-                instance = new EasyDataAccessIntance(con);
-            }
-            else
-            {
-                throw new Exception($"EasyDataAccessType {easyDataAccessType} not yet implemented!");
-            }
-
-            return instance;
-        }
-
-        public async Task<EasyDataAccessIntance> CreateConnectionAsync(IDbConnection connection)
-        {
-            return await Task.Run(() => CreateConnection(connection));
-        }
-
-        private IDbConnection CreateConnectionSqlServer(string connectionString)
-        {
-            SqlConnection sqlConnection = new SqlConnection(CheckConnectionString(connectionString));
-
-            if (sqlConnection.State != ConnectionState.Open)
-                sqlConnection.Open();
-
-            this.dcConnection.Add(connectionString, sqlConnection);
-
-            return this.GetConnection(connectionString);
-        }
-
-        private async Task<IDbConnection> CreateConnectionSqlServerAsync(string connectionString)
-        {
-            SqlConnection sqlConnection = new SqlConnection(CheckConnectionString(connectionString));
-
-            if (sqlConnection.State != ConnectionState.Open)
-                await sqlConnection.OpenAsync();
-
-            this.dcConnection.Add(connectionString, sqlConnection);
-
-            return this.GetConnection(connectionString);
-        }
-
-        private string CheckConnectionString(string connectionString)
-        {
-            if (string.IsNullOrEmpty(connectionString))
-                throw new Exception("The ConnectionString needs to be informed!");
-
-            return connectionString;
-        }
-
-        public void SetEasyDataAccessTypeConnection(EasyDataAccessTypeConnection easyDataAccessTypeConnection)
-        {
-            this.easyDataAccessTypeConnection = easyDataAccessTypeConnection;
+            GC.SuppressFinalize(this);
         }
 
         #endregion
+
+
+        //#region Connection
+
+        public EasyDataAccessConnection CreateConnection(string connectionString)
+        {
+            var edai = new EasyDataAccessConnection();
+            edai.CreateConnection(connectionString);
+            return edai;
+        }
+
+        public EasyDataAccessConnection CreateConnection(IDbConnection connection)
+        {
+            var edai = new EasyDataAccessConnection();
+            edai.CreateConnection(connection);
+            return edai;
+        }
+
+        public async Task<EasyDataAccessConnection> CreateConnectionAsync(string connectionString)
+        {
+            var edai = new EasyDataAccessConnection();
+            await edai.CreateConnectionAsync(connectionString);
+            return edai;
+        }
+
+        public async Task<EasyDataAccessConnection> CreateConnectionAsync(IDbConnection connection)
+        {
+            var edai = new EasyDataAccessConnection();
+            await edai.CreateConnectionAsync(connection);
+            return edai;
+
+        }
+
+
+        //#endregion
     }
 }

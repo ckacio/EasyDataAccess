@@ -23,7 +23,7 @@ namespace EasyDataAccess.Core.Tests
         {
             using (var db = _eda.CreateConnection(_connectionString))
             {
-                Assert.IsTrue(db.GetType().Name == "EasyDataAccessIntance");
+                Assert.IsTrue(db.GetType().Name == "EasyDataAccessConnection");
             }
         }
 
@@ -32,7 +32,7 @@ namespace EasyDataAccess.Core.Tests
         {
             using (var db = await _eda.CreateConnectionAsync(_connectionString))
             {
-                Assert.IsTrue(db.GetType().Name == "EasyDataAccessIntance");
+                Assert.IsTrue(db.GetType().Name == "EasyDataAccessConnection");
             }
         }
 
@@ -44,7 +44,7 @@ namespace EasyDataAccess.Core.Tests
             {
                 using (var db = _eda.CreateConnection(""))
                 {
-                    Assert.IsTrue(db.GetType().Name == "EasyDataAccessIntance");
+                    Assert.IsTrue(db.GetType().Name == "EasyDataAccessConnection");
                 }
             }
             catch
@@ -59,7 +59,7 @@ namespace EasyDataAccess.Core.Tests
         {
             using (var db = _eda.CreateConnection(_connectionString))
             {
-                Assert.IsTrue(db.GetType().Name == "EasyDataAccessIntance");
+                Assert.IsTrue(db.GetType().Name == "EasyDataAccessConnection");
             }
         }
 
@@ -68,20 +68,22 @@ namespace EasyDataAccess.Core.Tests
         {
             using (var db = await _eda.CreateConnectionAsync(_connectionString))
             {
-                Assert.IsTrue(db.GetType().Name == "EasyDataAccessIntance");
+                Assert.IsTrue(db.GetType().Name == "EasyDataAccessConnection");
             }
         }
 
         [TestMethod]
-        public void EasyDataAccess_CreateConnection_SqlConecctionn()
+        public async Task EasyDataAccess_CreateConnection_SqlConecctionnAsync()
         {
             var sqlConecction = new SqlConnection(_connectionString);
-            sqlConecction.Open();
+            await sqlConecction.OpenAsync();
 
-            using (var db = _eda.CreateConnection(sqlConecction))
+            using (var db = await _eda.CreateConnectionAsync(sqlConecction))
             {
-                Assert.IsTrue(db.GetType().Name == "EasyDataAccessIntance");
+                Assert.IsTrue(db.GetType().Name == "EasyDataAccessConnection");
             }
+
+            sqlConecction.Close();
         }
 
         [TestMethod]
@@ -246,7 +248,6 @@ namespace EasyDataAccess.Core.Tests
                     {
                         Debug.WriteLine(string.Format("{0}-{1}-{2}", cartoon.CartoonId, cartoon.Name, cartoon.Country));
                     }
-
                 }
             }
             catch (Exception ex)
@@ -519,7 +520,6 @@ namespace EasyDataAccess.Core.Tests
                     var cartoonId = db.GetParameterOuput("CartoonId");
 
                     Debug.WriteLine(string.Format("Rows Affected-{0} Created CartoonId-{1}", rowsAffected, cartoonId));
-
                 }
             }
             catch
@@ -555,7 +555,6 @@ namespace EasyDataAccess.Core.Tests
                     var rowsAffected = await db.ExecuteNonQueryAsync();
 
                     Debug.WriteLine(string.Format("Rows Affected-{0}", rowsAffected));
-
                 }
             }
             catch

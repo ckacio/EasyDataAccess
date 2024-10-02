@@ -14,16 +14,19 @@ using System.Dynamic;
 using System.Linq;
 using System.Diagnostics;
 using DataAccess.Interfaces;
+using EasyDataAccess.Enums;
+using System.Data.Common;
 
 namespace EasyDataAccess
 {
-    public class EasyDataAccessIntance : IDisposable, IEasyDataAccessIntance
+    public class EasyDataAccessConnection : IDisposable, IEasyDataAccessConnection
     {
         #region Private Variables
 
         private bool disposed = false;
+        private string connectionString;
         private IDbConnection Connection;
-        public IDbCommand Command { get; set; }
+        private IDbCommand Command { get; set; }
         private int CommandTimeout = 0;
         private IDbTransaction Transaction;
         private Dictionary<string, string> dcFieldsDataReader = new Dictionary<string, string>();
@@ -33,21 +36,23 @@ namespace EasyDataAccess
         private Dictionary<string, object> dcFixedValues = new Dictionary<string, object>();
         private List<PropertyInfo> lstPropertyInfoEntity = new List<PropertyInfo>();
         private List<FieldInfo> lstFieldInfoEntity = new List<FieldInfo>();
+        private EasyDataAccessTypeConnection easyDataAccessTypeConnection = EasyDataAccessTypeConnection.SqlServer;
 
         #endregion
 
+
         #region Constructor
 
-        public EasyDataAccessIntance(IDbConnection connection)
+        public EasyDataAccessConnection()
         {
-            this.Connection = connection;
         }
 
         #endregion
 
         #region Dispose
 
-        ~EasyDataAccessIntance()
+
+        ~EasyDataAccessConnection()
         {
             this.Dispose(false);
         }
@@ -64,25 +69,10 @@ namespace EasyDataAccess
             {
                 if (disposing)
                 {
-                    DisposeObjects();
+                    CloseConnection(); ;
                 }
 
                 this.disposed = true;
-            }
-        }
-
-        private void DisposeObjects()
-        {
-            if (this.Command != null)
-            {
-                this.Command.Dispose();
-                this.Command = null;
-            }
-
-            if (this.Transaction != null)
-            {
-                this.Transaction.Dispose();
-                this.Transaction = null;
             }
         }
 
@@ -343,6 +333,95 @@ namespace EasyDataAccess
 
         #endregion
 
+        #region Connection
+
+        public void CreateConnection(string connectionString)
+        {
+            if (easyDataAccessTypeConnection == EasyDataAccessTypeConnection.SqlServer)
+            {
+                if (this.Connection == null)
+                    this.Connection = CreateConnectionSqlServer(connectionString);
+
+            }
+            else
+            {
+                throw new Exception($"EasyDataAccessType {easyDataAccessTypeConnection} not yet implemented!");
+            }
+        }
+
+        public async Task CreateConnectionAsync(string connectionString)
+        {
+            if (this.easyDataAccessTypeConnection == EasyDataAccessTypeConnection.SqlServer)
+            {
+                if (this.Connection == null)
+                    this.Connection = await CreateConnectionSqlServerAsync(connectionString);
+            }
+            else
+            {
+                throw new Exception($"EasyDataAccessType {this.easyDataAccessTypeConnection} not yet implemented!");
+            }
+        }
+
+        public void CreateConnection(IDbConnection connection)
+        {
+            if (connection != null)
+            {
+                this.Connection = connection;
+            }
+        }
+
+        public async Task CreateConnectionAsync(IDbConnection connection)
+        {
+            await Task.Run(() => CreateConnection(connection));
+        }
+
+        private IDbConnection CreateConnectionSqlServer(string connectionString)
+        {
+            SqlConnection sqlConnection = new SqlConnection(CheckConnectionString(connectionString));
+
+            if (sqlConnection.State != ConnectionState.Open)
+                sqlConnection.Open();
+
+            this.Connection = sqlConnection;
+
+            return this.Connection;
+        }
+
+        private async Task<IDbConnection> CreateConnectionSqlServerAsync(string connectionString)
+        {
+            SqlConnection sqlConnection = new SqlConnection(CheckConnectionString(connectionString));
+
+            if (sqlConnection.State != ConnectionState.Open)
+                await sqlConnection.OpenAsync();
+
+            this.Connection = sqlConnection;
+
+            return this.Connection;
+        }
+
+        private string CheckConnectionString(string connectionString)
+        {
+            if (string.IsNullOrEmpty(connectionString))
+                throw new Exception("The ConnectionString needs to be informed!");
+
+            return connectionString;
+        }
+
+        public void SetEasyDataAccessTypeConnection(EasyDataAccessTypeConnection easyDataAccessTypeConnection)
+        {
+            this.easyDataAccessTypeConnection = easyDataAccessTypeConnection;
+        }
+
+        public void CloseConnection()
+        {
+            if (this.Connection != null && this.Connection.State == ConnectionState.Open)
+            {
+                this.Connection.Close();
+            }
+        }
+
+        #endregion
+
         #region Map and Load DataReader To Property/Field Entity
 
         public T SetDataReaderToEntity<T>(IDataReader dr)
@@ -554,7 +633,7 @@ namespace EasyDataAccess
                 dcFixedValues.Add(nameFieldEntity, fixedValue);
         }
 
-        public void ClearNicks()
+        public void ClearMaps()
         {
             dcMap.Clear();
         }

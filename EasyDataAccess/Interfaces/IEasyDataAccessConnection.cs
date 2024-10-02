@@ -13,10 +13,11 @@ using System.Collections;
 using System.Dynamic;
 using System.Linq;
 using System.Diagnostics;
+using EasyDataAccess.Enums;
 
 namespace DataAccess.Interfaces
 {
-    public interface IEasyDataAccessIntance
+    public interface IEasyDataAccessConnection
     {
 
         #region Connection
@@ -87,6 +88,22 @@ namespace DataAccess.Interfaces
 
         #endregion
 
+        #region Connection
+
+        void CreateConnection(string connectionString);
+
+        Task CreateConnectionAsync(string connectionString);
+
+        void CreateConnection(IDbConnection connection);
+
+        Task CreateConnectionAsync(IDbConnection connection);
+
+        void SetEasyDataAccessTypeConnection(EasyDataAccessTypeConnection easyDataAccessTypeConnection);
+
+        void CloseConnection();
+
+        #endregion
+
         #region Map and Load DataReader To Property/Field Entity
 
         T SetDataReaderToEntity<T>(IDataReader dr);
@@ -95,7 +112,7 @@ namespace DataAccess.Interfaces
 
         void SetFixedValue(string nameFieldEntity, object fixedValue);
 
-        void ClearNicks();
+        void ClearMaps();
 
         void ClearFixedValues();
 
