@@ -73,7 +73,9 @@ CREATE PROC dbo.SEL_Cartoon(
 AS
 BEGIN
 
-	SELECT	* 
+	SELECT	Cartoon_Id,
+			Name_Cartoon,
+			Country
 	FROM	Cartoon
 	WHERE   (@Name_Cartoon IS NULL OR  Name_Cartoon like '%' + @Name_Cartoon) AND
 			(@Country IS NULL OR  Country = @Country)
