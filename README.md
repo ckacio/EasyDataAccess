@@ -16,11 +16,13 @@ Uses the Single Connection approach, avoiding opening and closing connections.  
 
 <h3>Auto mapping between data and objects</h3><br>
 Return a List of T <br><br>
-<img src="https://github.com/user-attachments/assets/30b247e4-bc9e-4020-8b18-da7825e0214e">
+<img src="https://github.com/user-attachments/assets/0e2fb91c-e89f-4894-97ba-dd6666f54876"><br><br>
+List Returned <br><br>
+<img src="https://github.com/user-attachments/assets/45da1123-4d6d-4020-9db6-96d064450205">
 <br>
 
 <h3>Using SetMap</h3><br>
-<img src="https://github.com/user-attachments/assets/960c8784-2d58-49c0-8c4f-f0c4884c29e7">
+<img src="https://github.com/user-attachments/assets/fa469d7c-58d7-4ed4-8b07-30f4c51827a0">
 <br>
 
 <h3>Using Transaction</h3><br>
